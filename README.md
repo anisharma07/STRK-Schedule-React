@@ -1,73 +1,123 @@
-# Welcome to your Lovable project
+# STRK-Schedule 🏪🧬
 
-## Project info
+**A Web3-powered decentralized healthcare platform for diabetes management, built with React and Starknet.**
 
-**URL**: https://lovable.dev/projects/7b2b4ad9-702d-4949-b0bb-afb85f4cbb70
+## 🚀 Overview
 
-## How can I edit this code?
+**STRK-Schedule** is a decentralized application (dApp) designed to transform how chronic conditions like diabetes are managed—especially within public healthcare systems. By integrating modern Web3 tools such as NFTs, DAOs, and Starknet's Layer 2 scaling, STRK-Schedule empowers patients, doctors, and governments to shift from reactive to proactive healthcare.
 
-There are several ways of editing your application.
+## 🧠 Problem Statement
 
-**Use Lovable**
+Diabetes is a chronic condition affecting millions. Traditional healthcare systems often lack the continuous, personalized care necessary for long-term disease management. In public healthcare, outdated infrastructure, fragmented data, and lack of incentives result in inefficiencies, higher costs, and poor health outcomes.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/7b2b4ad9-702d-4949-b0bb-afb85f4cbb70) and start prompting.
+## 💡 STRK-Schedule Solution
 
-Changes made via Lovable will be committed automatically to this repo.
+STRK-Schedule provides a decentralized platform that ensures:
 
-**Use your preferred IDE**
+- 🔒 **Secure, patient-owned health records**
+- 👨‍⚕️ **Streamlined clinical workflows**
+- 🧑‍⚕️ **Incentivized health engagement via DAOs**
+- 📊 **Government dashboards for real-time public health monitoring**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## ✨ Key Features
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 🔐 Secure Data Management
+- Blockchain-based storage of health records
+- Patient-owned data with role-based access
+- Integration with IPFS/Filecoin for decentralized file storage
 
-Follow these steps:
+### 📈 Real-Time Public Health Monitoring
+- Anonymous, aggregated data insights for public health agencies
+- Early detection of outbreak clusters or care gaps
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### 🏥 Efficient Healthcare Infrastructure
+- Doctor dashboards with streamlined record access
+- Appointment scheduling and follow-up tracking
+- Automated billing integration with crypto payments
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### ⚡ Cost Reduction
+- Built on Starknet L2 for high-throughput, low-cost transactions
+- On-chain logic minimizes centralized backend dependencies
 
-# Step 3: Install the necessary dependencies.
-npm i
+### 🏆 Incentive-Based Health Models
+- DAO-governed reward structures for healthy behavior
+- NFTs for care milestones and participation proof
+- Integration with Farcaster for decentralized identity
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+## 🛠 Tech Stack
+
+| Technology       | Description                                     |
+|------------------|-------------------------------------------------|
+| **React**        | Frontend framework                              |
+| **Starknet**     | Ethereum Layer 2 ZK-Rollup for scalability      |
+| **Cairo**        | Smart contract language for Starknet            |
+| **IPFS/Filecoin**| Decentralized file storage                      |
+| **LIT Protocol** | Access control for encrypted patient records    |
+| **WAGMI**        | Web3 React hooks for wallet connectivity        |
+| **Ionic**        | UI framework for mobile-first health dApps      |
+
+## 🔧 Local Development
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/STRK-Schedule.git
+   cd STRK-Schedule
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server:**
+   ```bash
+   npm start
+   ```
+
+4. **Build for production:**
+   ```bash
+   npm run build
+   ```
+
+## 📦 Smart Contract Deployment (Optional)
+
+1. Use Starknet CLI or Voyager to deploy Cairo contracts.
+2. Configure frontend with deployed contract addresses in `.env`.
+
+## 🧪 Testing
+
+```bash
+npm run test
 ```
 
-**Edit a file directly in GitHub**
+## 🔐 Environment Variables
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Create a `.env` file with the following:
 
-**Use GitHub Codespaces**
+```
+REACT_APP_STARKNET_CONTRACT_ADDRESS=your_contract_address
+REACT_APP_LIT_API_KEY=your_lit_api_key
+REACT_APP_IPFS_GATEWAY=https://your-ipfs-gateway
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🌍 Use Cases
 
-## What technologies are used for this project?
+- Government public health programs (e.g., Mohalla Clinics)
+- Diabetes management in low-resource environments
+- NGO-led chronic care reward systems
 
-This project is built with:
+## 🤝 Contributing
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Contributions are welcome! Please fork the repository and submit a pull request.
 
-## How can I deploy this project?
+## 📄 License
 
-Simply open [Lovable](https://lovable.dev/projects/7b2b4ad9-702d-4949-b0bb-afb85f4cbb70) and click on Share -> Publish.
+This project is licensed under the [MIT License](LICENSE).
 
-## Can I connect a custom domain to my Lovable project?
+## 👨‍💻 Author
 
-Yes, you can!
+Developed by [Your Name](https://github.com/yourusername)
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+---
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+> STRK-Schedule: Redefining chronic care—decentralized, patient-owned, and proactive.
