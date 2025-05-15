@@ -106,18 +106,6 @@ REACT_APP_IPFS_GATEWAY=https://your-ipfs-gateway
 - Diabetes management in low-resource environments
 - NGO-led chronic care reward systems
 
-## 🤝 Contributing
-
-Contributions are welcome! Please fork the repository and submit a pull request.
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
-
-## 👨‍💻 Author
-
-Developed by [Your Name](https://github.com/yourusername)
-
 ---
 
 > STRK-Schedule: Redefining chronic care—decentralized, patient-owned, and proactive.
