@@ -1,7 +1,6 @@
 // import WalletBar from "@/components/layout/WalletBar";
 import { useAuthContext } from "@/auth/useAuthContext";
 import { useIsUserRegistered } from "@/hooks/contractRead";
-import { useRegisterUser } from "@/hooks/contractWrite";
 import {
   IonPage,
   IonContent,
