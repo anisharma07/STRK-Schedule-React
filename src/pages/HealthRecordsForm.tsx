@@ -62,10 +62,10 @@ const HealthRecordsForm: React.FC = () => {
       notes: "",
     },
     symptoms: {
-      generalComplaints: [],
-      neurologicalFindings: [],
-      behaviorChanges: [],
-      consciousnessChanges: [],
+      generalComplaints: [] as string[],
+      neurologicalFindings: [] as string[],
+      behaviorChanges: [] as string[],
+      consciousnessChanges: [] as string[],
     },
   });
 
@@ -80,7 +80,11 @@ const HealthRecordsForm: React.FC = () => {
   });
 
   // Update form data handler
-  const handleInputChange = (section: string, field: string, value: any) => {
+  const handleInputChange = (
+    section: string,
+    field: string,
+    value: string | number | boolean
+  ) => {
     setFormData((prevData) => ({
       ...prevData,
       [section]: {
@@ -97,8 +101,10 @@ const HealthRecordsForm: React.FC = () => {
     value: string,
     checked: boolean
   ) => {
-    const currentValues = [
-      ...formData.symptoms[field as keyof typeof formData.symptoms],
+    const currentValues: string[] = [
+      ...(formData.symptoms[
+        field as keyof typeof formData.symptoms
+      ] as string[]),
     ];
 
     if (checked) {
@@ -248,6 +254,7 @@ const HealthRecordsForm: React.FC = () => {
       setComputedTotalRiskScore(score.toString());
       handleInputChange("diabetesRisk", "totalRiskScore", score.toString());
     } catch (e) {
+      console.error("Error calculating total risk score:", e);
       // Handle calculation errors silently
     }
   }, [formData.diabetesRisk, computedBMI]);
@@ -281,13 +288,14 @@ const HealthRecordsForm: React.FC = () => {
 
       // Navigate back after successful submission
       history.push("/profile?tab=health");
-    } catch (error) {
+    } catch (error: unknown) {
       presentToast({
         message: "There was an error saving your health records.",
         duration: 3000,
         position: "bottom",
         color: "danger",
       });
+      console.error("Error saving health records:", error);
     } finally {
       setIsSubmitting(false);
     }

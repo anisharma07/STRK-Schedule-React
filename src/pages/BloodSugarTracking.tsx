@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
 import { format } from "date-fns";
 import {
   IonPage,
@@ -218,7 +217,10 @@ const BloodSugarTracking: React.FC = () => {
     date: "",
   });
 
-  const handleBloodSugarChange = (field: string, value: any) => {
+  const handleBloodSugarChange = (
+    field: string,
+    value: string | number | null
+  ) => {
     setBloodSugarForm((prev) => ({
       ...prev,
       [field]: value,
@@ -232,7 +234,7 @@ const BloodSugarTracking: React.FC = () => {
     }
   };
 
-  const handleHba1cChange = (field: string, value: any) => {
+  const handleHba1cChange = (field: string, value: string | number | null) => {
     setHba1cForm((prev) => ({
       ...prev,
       [field]: value,
@@ -246,7 +248,7 @@ const BloodSugarTracking: React.FC = () => {
     }
   };
 
-  const handleWeightChange = (field: string, value: any) => {
+  const handleWeightChange = (field: string, value: string | number | null) => {
     setWeightForm((prev) => ({
       ...prev,
       [field]: value,

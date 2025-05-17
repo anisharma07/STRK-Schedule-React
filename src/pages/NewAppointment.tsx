@@ -37,14 +37,11 @@ import {
   IonRefresher,
   IonRefresherContent,
   IonSkeletonText,
-  IonThumbnail,
-  IonAvatar,
   IonList,
   IonListHeader,
 } from "@ionic/react";
 import {
   addOutline,
-  timeOutline,
   calendarOutline,
   locationOutline,
   medicalOutline,
@@ -89,7 +86,7 @@ const initialAppointments = [
 
 const NewAppointments: React.FC = () => {
   const [appointments, setAppointments] = useState(initialAppointments);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState<"upcoming" | "past">("upcoming");
@@ -120,7 +117,7 @@ const NewAppointments: React.FC = () => {
   });
 
   // Handle form input changes
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (field: string, value: string | number | Date) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -265,13 +262,14 @@ const NewAppointments: React.FC = () => {
       // Close modal and reset form
       setShowModal(false);
       resetForm();
-    } catch (error) {
+    } catch (error: unknown) {
       presentToast({
         message: "There was an error scheduling your appointment.",
         duration: 3000,
         position: "bottom",
         color: "danger",
       });
+      console.error("Error", error);
     } finally {
       setIsSubmitting(false);
     }

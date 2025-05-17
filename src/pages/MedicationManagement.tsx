@@ -26,9 +26,7 @@ import {
   IonModal,
   IonButtons,
   IonText,
-  IonList,
   IonToast,
-  IonDatetime,
   IonBackButton,
   IonItemDivider,
 } from "@ionic/react";
@@ -38,7 +36,6 @@ import {
   pencilOutline,
   trashOutline,
   addOutline,
-  calendarOutline,
 } from "ionicons/icons";
 
 // Sample data for demonstration
@@ -74,7 +71,6 @@ const initialMedications = [
 ];
 
 const MedicationManagement: React.FC = () => {
-  const history = useHistory();
   const [medications, setMedications] = useState(initialMedications);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -144,7 +140,10 @@ const MedicationManagement: React.FC = () => {
   };
 
   // Handle form input changes
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (
+    field: string,
+    value: string | number | string[] | null
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -283,11 +282,12 @@ const MedicationManagement: React.FC = () => {
       setShowAddModal(false);
       setShowEditModal(false);
       resetForm();
-    } catch (error) {
+    } catch (error: unknown) {
       setToastMessage({
         message: "There was an error saving your medication.",
         color: "danger",
       });
+      console.error("Error saving medication:", error);
       setShowToast(true);
     } finally {
       setIsSubmitting(false);

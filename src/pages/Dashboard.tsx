@@ -61,8 +61,9 @@ const Dashboard: React.FC = () => {
     isError: weightError,
   } = useGetWeight({ accountAddress: address });
 
-  const { unit: weightUnitData, isLoading: weightUnitLoading } =
-    useGetWeightUnit({ accountAddress: address });
+  const { unit: weightUnitData } = useGetWeightUnit({
+    accountAddress: address,
+  });
 
   // State to store formatted health data
   const [healthMetrics, setHealthMetrics] = useState({
@@ -212,7 +213,13 @@ const Dashboard: React.FC = () => {
                   title="Blood Sugar"
                   value={healthMetrics.bloodSugar.value}
                   unit="mg/dL"
-                  status={healthMetrics.bloodSugar.status as any}
+                  status={
+                    healthMetrics.bloodSugar.status as
+                      | "normal"
+                      | "good"
+                      | "warning"
+                      | "danger"
+                  }
                   change={healthMetrics.bloodSugar.change}
                 />
               )}
@@ -227,7 +234,13 @@ const Dashboard: React.FC = () => {
                   title="HbA1c"
                   value={healthMetrics.hba1c.value}
                   unit="%"
-                  status={healthMetrics.hba1c.status as any}
+                  status={
+                    healthMetrics.hba1c.status as
+                      | "normal"
+                      | "good"
+                      | "warning"
+                      | "danger"
+                  }
                   change={healthMetrics.hba1c.change}
                 />
               )}
@@ -242,7 +255,13 @@ const Dashboard: React.FC = () => {
                   title="Weight"
                   value={healthMetrics.weight.value}
                   unit={healthMetrics.weight.unit}
-                  status={healthMetrics.weight.status as any}
+                  status={
+                    healthMetrics.weight.status as
+                      | "normal"
+                      | "good"
+                      | "warning"
+                      | "danger"
+                  }
                   change={healthMetrics.weight.change}
                 />
               )}
@@ -252,7 +271,13 @@ const Dashboard: React.FC = () => {
                 title="Health Score"
                 value={healthMetrics.healthScore.value}
                 unit="/100"
-                status={healthMetrics.healthScore.status as any}
+                status={
+                  healthMetrics.healthScore.status as
+                    | "normal"
+                    | "good"
+                    | "warning"
+                    | "danger"
+                }
                 change={healthMetrics.healthScore.change}
               />
             </IonCol>
