@@ -2,6 +2,10 @@
 
 _A Web3-powered decentralized healthcare platform for diabetes management_
 
+### Deployed contract
+
+`0x07b46771d0012e97bd23a4eadcd3511230a0c97f827f0068cd339e7100d36df4`
+
 ## Overview
 
 **STRK Schedule** is a Web3-powered decentralized healthcare platform designed to help individuals manage diabetes more effectively. By leveraging blockchain technology, the platform enables secure tracking of blood sugar levels, medication, activity logs, and medical appointments on-chain.
@@ -10,8 +14,8 @@ The platform empowers patients with verified medical data NFTs and community-gov
 
 ## Screeshots
 
-| ![Image 1](/public/assets/screenshots/ss1.png)  | ![Image 2](/public/assets/screenshots/ss2.png) | ![Image 3](/public/assets/screenshots/ss3.png)  |
-| ----------------------------------------------- | ----------------------------------------------- | ----------------------------------------------- |
+| ![Image 1](/public/assets/screenshots/ss1.png) | ![Image 2](/public/assets/screenshots/ss2.png) | ![Image 3](/public/assets/screenshots/ss3.png) |
+| ---------------------------------------------- | ---------------------------------------------- | ---------------------------------------------- |
 | ![Image 4](/public/assets/screenshots/ss4.png) | ![Image 5](/public/assets/screenshots/ss5.png) | ![Image 6](/public/assets/screenshots/ss6.png) |
 
 ## Key Features
