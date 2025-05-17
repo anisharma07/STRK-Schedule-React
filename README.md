@@ -10,9 +10,9 @@ The platform empowers patients with verified medical data NFTs and community-gov
 
 ## Screeshots
 
-| ![Image 1](/public/assets/screenshots/ss1.png)  | ![Image 2](//public/assets/screenshots/ss2.png) | ![Image 3](/public/assets/screenshots/ss3.png)  |
+| ![Image 1](/public/assets/screenshots/ss1.png)  | ![Image 2](/public/assets/screenshots/ss2.png) | ![Image 3](/public/assets/screenshots/ss3.png)  |
 | ----------------------------------------------- | ----------------------------------------------- | ----------------------------------------------- |
-| ![Image 4](//public/assets/screenshots/ss4.png) | ![Image 5](//public/assets/screenshots/ss5.png) | ![Image 6](//public/assets/screenshots/ss6.png) |
+| ![Image 4](/public/assets/screenshots/ss4.png) | ![Image 5](/public/assets/screenshots/ss5.png) | ![Image 6](/public/assets/screenshots/ss6.png) |
 
 ## Key Features
 
