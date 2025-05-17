@@ -30,7 +30,6 @@ import {
   retrieveProfileFromIpfs,
   uploadProfileToPinata,
 } from "@/utils/ipfsStorage";
-import { set } from "date-fns";
 // import { profileData as defaultProfileData } from "@/contants/profile";
 
 interface ProfileInfoProps {
@@ -125,7 +124,7 @@ const ProfileInfoTab: React.FC<ProfileInfoProps> = ({
       }
     };
     updateProfile();
-  }, [userProfileData, profileLoading]);
+  }, [userProfileData, profileLoading, profile.dateOfBirth]);
 
   // Update handler for form inputs
   const handleChange = (field: string, value: string) => {
@@ -150,14 +149,12 @@ const ProfileInfoTab: React.FC<ProfileInfoProps> = ({
   };
   // Add these to your existing hooks
   const [present, dismiss] = useIonLoading();
-  const { updateProfile, isPending } = useUpdateProfile();
+  const { updateProfile } = useUpdateProfile();
   const { status } = useAccount();
 
   // ...existing code...
 
-  const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const handleSave = async () => {
     // Check wallet connection
     if (status !== "connected") {
       setToastMessage("Please connect your wallet first");
@@ -487,7 +484,10 @@ const ProfileInfoTab: React.FC<ProfileInfoProps> = ({
                 <IonCol size="12" className="ion-text-end">
                   <IonButton
                     color="primary"
-                    onClick={(e) => handleSave(e)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleSave();
+                    }}
                     disabled={!isEditing}
                   >
                     Save Changes

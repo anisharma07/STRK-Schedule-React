@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
 import {
   IonPage,
   IonHeader,
@@ -109,7 +108,9 @@ const MedicationManagement: React.FC = () => {
   });
 
   // Reset form to defaults or to edit a medication
-  const resetForm = (medication = null) => {
+  const resetForm = (
+    medication: (typeof initialMedications)[0] | null = null
+  ) => {
     if (medication) {
       setFormData(medication);
     } else {
@@ -295,7 +296,7 @@ const MedicationManagement: React.FC = () => {
   };
 
   // Handle edit medication
-  const handleEdit = (medication: any) => {
+  const handleEdit = (medication: (typeof initialMedications)[0] | null) => {
     resetForm(medication);
     setShowEditModal(true);
   };

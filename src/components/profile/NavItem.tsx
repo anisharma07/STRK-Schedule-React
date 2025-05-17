@@ -1,7 +1,7 @@
 import { IonItem, IonIcon, IonLabel } from "@ionic/react";
 
 interface NavItemProps {
-  icon: React.ReactNode;
+  icon: string;
   label: string;
   active: boolean;
   onClick: () => void;
@@ -36,7 +36,7 @@ const NavItem = ({ icon, label, active, onClick, danger }: NavItemProps) => {
       }}
     >
       <IonIcon
-        icon={icon}
+        icon={icon || ""}
         color={getColor()}
         slot="start"
         style={{ fontSize: "18px" }}
