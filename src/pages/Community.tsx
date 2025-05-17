@@ -1,726 +1,979 @@
 import { useState } from "react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import RewardCard from "@/components/RewardCard";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonCard,
+  IonCardHeader,
+  IonCardContent,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonButton,
+  IonIcon,
+  IonBadge,
+  IonItem,
+  IonLabel,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonSegment,
+  IonSegmentButton,
+  IonProgressBar,
+  IonList,
+  IonAvatar,
+  IonSearchbar,
+  IonText,
+} from "@ionic/react";
+import {
+  personOutline,
+  ribbonOutline,
+  bookOutline,
+  heartOutline,
+  checkmarkOutline,
+  closeOutline,
+  documentTextOutline,
+} from "ionicons/icons";
+import Header from "@/components/layout/Header";
 
-const Community = () => {
-  const [communityFilter, setCommunityFilter] = useState<string>("all");
-
-  const rewardsData = [
-    {
-      title: "Consistent Glucose Readings",
-      description:
-        "Log your blood glucose levels at least twice daily for 7 consecutive days",
-      tokenAmount: 50,
-      progress: 100,
-      claimable: true,
-      category: "Health Tracking",
-      difficulty: "easy" as const,
-    },
-    {
-      title: "Movement Champion",
-      description:
-        "Complete 30 minutes of physical activity for 5 days in a week",
-      tokenAmount: 75,
-      progress: 60,
-      claimable: false,
-      category: "Physical Activity",
-      difficulty: "medium" as const,
-    },
-    {
-      title: "Nutrition Master",
-      description:
-        "Log complete meal information including carb counts for 14 consecutive days",
-      tokenAmount: 100,
-      progress: 35,
-      claimable: false,
-      category: "Diet",
-      difficulty: "medium" as const,
-    },
-    {
-      title: "Target Range Hero",
-      description:
-        "Keep 90% of glucose readings within your target range for a full month",
-      tokenAmount: 200,
-      progress: 0,
-      claimable: false,
-      category: "Health Outcomes",
-      difficulty: "hard" as const,
-    },
-    {
-      title: "Community Helper",
-      description:
-        "Answer 10 questions in the community forum to help others manage their diabetes",
-      tokenAmount: 80,
-      progress: 70,
-      claimable: false,
-      category: "Community",
-      difficulty: "easy" as const,
-    },
-    {
-      title: "Perfect Prescription",
-      description:
-        "Take all prescribed medications on time for 30 consecutive days",
-      tokenAmount: 150,
-      progress: 90,
-      claimable: false,
-      category: "Treatment",
-      difficulty: "medium" as const,
-    },
-  ];
-
-  const communityPosts = [
-    {
-      id: 1,
-      author: "DiabetesFighter28",
-      title: "How do you manage dawn phenomenon?",
-      content:
-        "I've been experiencing high morning blood sugars even though I go to bed with normal levels. Any tips on managing this dawn phenomenon?",
-      likes: 24,
-      replies: 18,
-      tags: ["Morning Highs", "Tips"],
-      time: "2 hours ago",
-    },
-    {
-      id: 2,
-      author: "HealthyDiabetic",
-      title: "New CGM system changed my life!",
-      content:
-        "I just started using the latest CGM system and it has completely transformed how I manage my diabetes. No more finger pricks!",
-      likes: 56,
-      replies: 32,
-      tags: ["Technology", "Success Story"],
-      time: "Yesterday",
-    },
-    {
-      id: 3,
-      author: "T1D_Runner",
-      title: "Marathon training with T1D",
-      content:
-        "I'm training for my first marathon. Anyone else here run long distances? How do you manage your glucose during training and race day?",
-      likes: 42,
-      replies: 28,
-      tags: ["Exercise", "Question"],
-      time: "3 days ago",
-    },
-    {
-      id: 4,
-      author: "DiabetesMom",
-      title: "School challenges for T1D child",
-      content:
-        "My 10-year-old was recently diagnosed and we're facing challenges at school. Looking for advice from parents who've navigated this.",
-      likes: 38,
-      replies: 45,
-      tags: ["Kids", "School", "Support"],
-      time: "4 days ago",
-    },
-  ];
-
-  const leaderboardData = [
-    {
-      rank: 1,
-      name: "HealthyDiabetic",
-      score: 1240,
-      streak: "45 days",
-      achievements: 18,
-    },
-    {
-      rank: 2,
-      name: "GlucoseWarrior",
-      score: 1105,
-      streak: "32 days",
-      achievements: 15,
-    },
-    {
-      rank: 3,
-      name: "T1D_Runner",
-      score: 980,
-      streak: "28 days",
-      achievements: 14,
-    },
-    {
-      rank: 4,
-      name: "DiabetesChampion",
-      score: 875,
-      streak: "21 days",
-      achievements: 12,
-    },
-    {
-      rank: 5,
-      name: "SugarController",
-      score: 830,
-      streak: "19 days",
-      achievements: 11,
-    },
-    {
-      rank: 6,
-      name: "HealthyLife365",
-      score: 790,
-      streak: "16 days",
-      achievements: 10,
-    },
-    {
-      rank: 7,
-      name: "GlucoseBalancer",
-      score: 745,
-      streak: "14 days",
-      achievements: 9,
-    },
-    {
-      rank: 8,
-      name: "DiabetesFighter28",
-      score: 710,
-      streak: "12 days",
-      achievements: 9,
-    },
-    {
-      rank: 9,
-      name: "HealthJourney",
-      score: 675,
-      streak: "10 days",
-      achievements: 8,
-    },
-    {
-      rank: 10,
-      name: "BetterEveryDay",
-      score: 640,
-      streak: "8 days",
-      achievements: 7,
-    },
-  ];
-
-  const upcomingEvents = [
-    {
-      title: "Virtual Diabetes Support Group",
-      date: "May 15, 2025",
-      time: "7:00 PM - 8:30 PM",
-      participants: 24,
-      type: "Support Group",
-    },
-    {
-      title: "Healthy Cooking Demo: Low-Carb Recipes",
-      date: "May 20, 2025",
-      time: "6:00 PM - 7:00 PM",
-      participants: 45,
-      type: "Workshop",
-    },
-    {
-      title: "Ask the Endocrinologist: Live Q&A",
-      date: "May 27, 2025",
-      time: "12:00 PM - 1:00 PM",
-      participants: 63,
-      type: "AMA",
-    },
-  ];
+const Community: React.FC = () => {
+  const [activeTab, setActiveTab] = useState("overview");
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
-      <main className="flex-grow bg-strk-gray">
-        <div className="relative bg-gradient-to-r from-strk-teal to-strk-purple text-white py-12">
-          <div className="absolute inset-0 bg-grid-white opacity-20"></div>
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-3xl">
-              <h1 className="text-3xl md:text-4xl font-bold mb-4">
-                STRK Community
-              </h1>
-              <p className="text-lg opacity-90 mb-6">
-                Connect with others, earn rewards, and improve your health
-                journey together. Share experiences, participate in challenges,
-                and build a supportive network.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <Button className="bg-white text-strk-teal-dark hover:bg-opacity-90">
-                  Join a Group
-                </Button>
-                <Button
-                  variant="outline"
-                  className="border-white text-black hover:text-white hover:bg-white/10"
-                >
-                  Find Events
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
+    <IonPage>
+      <Header />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid gap-6 md:grid-cols-12">
-            {/* Community sidebar */}
-            <div className="md:col-span-4 lg:col-span-3 space-y-6">
-              {/* Profile Card */}
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex flex-col items-center">
-                    <div className="w-20 h-20 rounded-full bg-gradient-to-r from-strk-teal to-strk-purple flex items-center justify-center text-white font-bold text-xl mb-4">
-                      AM
-                    </div>
-                    <h3 className="text-xl font-bold">Alex Morgan</h3>
-                    <p className="text-sm text-muted-foreground">
-                      @GlucoseWarrior
-                    </p>
-                    <div className="flex items-center gap-1 mt-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 text-yellow-500"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                      <span className="font-medium">Gold Member</span>
-                    </div>
-                  </div>
+      <IonContent className="ion-padding">
+        <h1
+          style={{ fontSize: "24px", fontWeight: "bold", margin: "0 0 8px 0" }}
+        >
+          Diabetes Care DAO
+        </h1>
+        <IonText
+          color="medium"
+          style={{ display: "block", marginBottom: "24px" }}
+        >
+          Join our decentralized community to improve diabetes care
+        </IonText>
 
-                  <div className="mt-6 space-y-4">
-                    <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>Health Score</span>
-                        <span className="font-medium">83/100</span>
-                      </div>
-                      <Progress value={83} className="h-2" />
-                    </div>
+        <IonSegment
+          value={activeTab}
+          onIonChange={(e) => setActiveTab(e.detail.value as string)}
+        >
+          <IonSegmentButton value="overview">
+            <IonLabel>Overview</IonLabel>
+          </IonSegmentButton>
+          <IonSegmentButton value="proposals">
+            <IonLabel>Proposals</IonLabel>
+          </IonSegmentButton>
+          <IonSegmentButton value="rewards">
+            <IonLabel>Rewards</IonLabel>
+          </IonSegmentButton>
+          <IonSegmentButton value="members">
+            <IonLabel>Members</IonLabel>
+          </IonSegmentButton>
+        </IonSegment>
 
-                    <div className="flex items-center justify-between">
-                      <div className="text-center">
-                        <div className="text-xl font-bold">32</div>
-                        <div className="text-xs text-muted-foreground">
-                          Day Streak
-                        </div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-xl font-bold">1,105</div>
-                        <div className="text-xs text-muted-foreground">
-                          STRK Points
-                        </div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-xl font-bold">15</div>
-                        <div className="text-xs text-muted-foreground">
-                          Achievements
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+        {/* Overview Tab */}
+        {activeTab === "overview" && (
+          <div className="ion-margin-top">
+            <IonGrid>
+              <IonRow>
+                <IonCol size="12" sizeMd="6">
+                  <IonCard>
+                    <IonCardHeader>
+                      <IonCardTitle>DAO Summary</IonCardTitle>
+                      <IonCardSubtitle>
+                        Community statistics and metrics
+                      </IonCardSubtitle>
+                    </IonCardHeader>
+                    <IonCardContent>
+                      <IonList lines="none">
+                        <IonItem>
+                          <IonLabel color="medium">Total Members</IonLabel>
+                          <IonText style={{ fontWeight: 500 }}>2,345</IonText>
+                        </IonItem>
+                        <IonItem>
+                          <IonLabel color="medium">Active Proposals</IonLabel>
+                          <IonText style={{ fontWeight: 500 }}>8</IonText>
+                        </IonItem>
+                        <IonItem>
+                          <IonLabel color="medium">Governance Token</IonLabel>
+                          <IonText style={{ fontWeight: 500 }}>STRK</IonText>
+                        </IonItem>
+                        <IonItem>
+                          <IonLabel color="medium">Treasury</IonLabel>
+                          <IonText style={{ fontWeight: 500 }}>
+                            45,000 STRK
+                          </IonText>
+                        </IonItem>
+                        <IonItem>
+                          <IonLabel color="medium">Your Voting Power</IonLabel>
+                          <IonText style={{ fontWeight: 500 }}>
+                            250 STRK (0.18%)
+                          </IonText>
+                        </IonItem>
+                      </IonList>
+                    </IonCardContent>
+                  </IonCard>
+                </IonCol>
 
-                  <Button className="w-full mt-4 bg-strk-teal hover:bg-strk-teal-dark">
-                    View Profile
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Upcoming Events */}
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg">Upcoming Events</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {upcomingEvents.map((event, index) => (
+                <IonCol size="12" sizeMd="6">
+                  <IonCard>
+                    <IonCardHeader>
+                      <IonCardTitle>Your Status</IonCardTitle>
+                      <IonCardSubtitle>
+                        Membership details and rewards
+                      </IonCardSubtitle>
+                    </IonCardHeader>
+                    <IonCardContent>
                       <div
-                        key={index}
-                        className="border-b last:border-0 pb-4 last:pb-0"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                          marginBottom: "16px",
+                        }}
                       >
-                        <div className="flex justify-between">
-                          <h4 className="font-medium">{event.title}</h4>
-                          <Badge className="bg-strk-purple">{event.type}</Badge>
-                        </div>
-                        <div className="text-sm text-muted-foreground mt-1">
-                          {event.date} • {event.time}
-                        </div>
-                        <div className="text-sm mt-2 flex items-center">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4 mr-1"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                            />
-                          </svg>
-                          <span>{event.participants} participating</span>
-                        </div>
+                        <IonBadge color="primary">Silver Member</IonBadge>
+                        <IonText color="medium" style={{ fontSize: "14px" }}>
+                          Since May 2024
+                        </IonText>
                       </div>
-                    ))}
-                  </div>
-                  <Button variant="outline" className="w-full mt-4">
-                    See All Events
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
 
-            {/* Main Community Content */}
-            <div className="md:col-span-8 lg:col-span-9">
-              <Tabs defaultValue="rewards">
-                <TabsList className="grid grid-cols-3">
-                  <TabsTrigger value="rewards">
-                    Rewards & Challenges
-                  </TabsTrigger>
-                  <TabsTrigger value="discussions">
-                    Discussion Forum
-                  </TabsTrigger>
-                  <TabsTrigger value="leaderboard">Leaderboard</TabsTrigger>
-                </TabsList>
-
-                {/* Rewards Tab */}
-                <TabsContent value="rewards" className="space-y-6 mt-4">
-                  <div className="flex justify-between items-center">
-                    <h2 className="text-xl font-bold">Available Challenges</h2>
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant={
-                          communityFilter === "all" ? "default" : "outline"
-                        }
-                        onClick={() => setCommunityFilter("all")}
-                        className={
-                          communityFilter === "all"
-                            ? "bg-strk-teal hover:bg-strk-teal-dark"
-                            : ""
-                        }
-                      >
-                        All
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant={
-                          communityFilter === "easy" ? "default" : "outline"
-                        }
-                        onClick={() => setCommunityFilter("easy")}
-                        className={
-                          communityFilter === "easy"
-                            ? "bg-green-500 hover:bg-green-600"
-                            : ""
-                        }
-                      >
-                        Easy
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant={
-                          communityFilter === "medium" ? "default" : "outline"
-                        }
-                        onClick={() => setCommunityFilter("medium")}
-                        className={
-                          communityFilter === "medium"
-                            ? "bg-yellow-500 hover:bg-yellow-600"
-                            : ""
-                        }
-                      >
-                        Medium
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant={
-                          communityFilter === "hard" ? "default" : "outline"
-                        }
-                        onClick={() => setCommunityFilter("hard")}
-                        className={
-                          communityFilter === "hard"
-                            ? "bg-red-500 hover:bg-red-600"
-                            : ""
-                        }
-                      >
-                        Hard
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                    {rewardsData
-                      .filter(
-                        (reward) =>
-                          communityFilter === "all" ||
-                          reward.difficulty === communityFilter
-                      )
-                      .map((reward, index) => (
-                        <RewardCard
-                          key={index}
-                          title={reward.title}
-                          description={reward.description}
-                          tokenAmount={reward.tokenAmount}
-                          progress={reward.progress}
-                          claimable={reward.claimable}
-                          category={reward.category}
-                          difficulty={reward.difficulty}
+                      <div style={{ marginBottom: "16px" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            marginBottom: "4px",
+                          }}
+                        >
+                          <IonText style={{ fontSize: "14px" }}>
+                            Progress to Gold Status
+                          </IonText>
+                          <IonText style={{ fontSize: "14px" }}>65%</IonText>
+                        </div>
+                        <IonProgressBar
+                          value={0.65}
+                          style={{ height: "8px", borderRadius: "4px" }}
                         />
-                      ))}
-                  </div>
-
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle>Community Challenges</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        <div className="border rounded-lg p-4">
-                          <div className="flex justify-between items-center">
-                            <h3 className="font-semibold text-lg">
-                              15,000 Step Weekend
-                            </h3>
-                            <Badge>95 participants</Badge>
-                          </div>
-                          <p className="text-sm text-muted-foreground my-2">
-                            Complete 15,000 steps this weekend (May 14-15) and
-                            earn bonus tokens!
-                          </p>
-                          <div className="flex items-center gap-2 mt-4">
-                            <div className="flex-1">
-                              <div className="flex justify-between text-xs mb-1">
-                                <span>Group Progress</span>
-                                <span>65%</span>
-                              </div>
-                              <Progress value={65} className="h-2" />
-                            </div>
-                            <Button
-                              size="sm"
-                              className="bg-strk-teal hover:bg-strk-teal-dark"
-                            >
-                              Join
-                            </Button>
-                          </div>
-                        </div>
-
-                        <div className="border rounded-lg p-4">
-                          <div className="flex justify-between items-center">
-                            <h3 className="font-semibold text-lg">
-                              30-Day Low Carb Challenge
-                            </h3>
-                            <Badge>178 participants</Badge>
-                          </div>
-                          <p className="text-sm text-muted-foreground my-2">
-                            Track your meals and stay under 100g carbs daily for
-                            improved glucose control.
-                          </p>
-                          <div className="flex items-center gap-2 mt-4">
-                            <div className="flex-1">
-                              <div className="flex justify-between text-xs mb-1">
-                                <span>Group Progress</span>
-                                <span>42%</span>
-                              </div>
-                              <Progress value={42} className="h-2" />
-                            </div>
-                            <Button
-                              size="sm"
-                              className="bg-strk-teal hover:bg-strk-teal-dark"
-                            >
-                              Join
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-
-                {/* Discussions Tab */}
-                <TabsContent value="discussions" className="mt-4">
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-bold">Community Discussions</h2>
-                    <Button className="bg-strk-teal hover:bg-strk-teal-dark">
-                      New Post
-                    </Button>
-                  </div>
-
-                  <div className="space-y-4">
-                    {communityPosts.map((post) => (
-                      <Card key={post.id}>
-                        <CardContent className="p-6">
-                          <div className="flex items-center justify-between">
-                            <h3 className="text-lg font-semibold">
-                              {post.title}
-                            </h3>
-                            <span className="text-xs text-muted-foreground">
-                              {post.time}
-                            </span>
-                          </div>
-
-                          <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
-                            <span>by {post.author}</span>
-                            <span>•</span>
-                            <div className="flex items-center">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-4 w-4 mr-1"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
-                                />
-                              </svg>
-                              {post.likes}
-                            </div>
-                            <span>•</span>
-                            <div className="flex items-center">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-4 w-4 mr-1"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                                />
-                              </svg>
-                              {post.replies}
-                            </div>
-                          </div>
-
-                          <p className="mt-3 text-sm">{post.content}</p>
-
-                          <div className="mt-4 flex flex-wrap gap-2">
-                            {post.tags.map((tag, index) => (
-                              <Badge
-                                key={index}
-                                variant="outline"
-                                className="bg-strk-purple/10 text-strk-purple-dark border-none"
-                              >
-                                {tag}
-                              </Badge>
-                            ))}
-                          </div>
-
-                          <div className="mt-4 flex gap-3">
-                            <Button size="sm" variant="outline">
-                              Like
-                            </Button>
-                            <Button
-                              size="sm"
-                              className="bg-strk-teal hover:bg-strk-teal-dark"
-                            >
-                              Reply
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-
-                  <Button className="w-full mt-4" variant="outline">
-                    Load More
-                  </Button>
-                </TabsContent>
-
-                {/* Leaderboard Tab */}
-                <TabsContent value="leaderboard" className="mt-4">
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle>Community Leaderboard</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="relative overflow-x-auto">
-                        <table className="w-full text-left">
-                          <thead className="text-xs uppercase bg-muted/50">
-                            <tr>
-                              <th className="px-4 py-3">Rank</th>
-                              <th className="px-4 py-3">Name</th>
-                              <th className="px-4 py-3">Score</th>
-                              <th className="px-4 py-3">Streak</th>
-                              <th className="px-4 py-3">Achievements</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {leaderboardData.map((user) => (
-                              <tr key={user.rank} className="border-b">
-                                <td className="px-4 py-3">
-                                  {user.rank <= 3 ? (
-                                    <div
-                                      className={`w-7 h-7 rounded-full flex items-center justify-center ${
-                                        user.rank === 1
-                                          ? "bg-yellow-500"
-                                          : user.rank === 2
-                                          ? "bg-gray-400"
-                                          : "bg-amber-700"
-                                      } text-white font-bold`}
-                                    >
-                                      {user.rank}
-                                    </div>
-                                  ) : (
-                                    <span className="font-medium">
-                                      {user.rank}
-                                    </span>
-                                  )}
-                                </td>
-                                <td className="px-4 py-3 font-medium">
-                                  {user.name}
-                                  {user.name === "GlucoseWarrior" && (
-                                    <span className="ml-2 text-xs bg-strk-teal/20 text-strk-teal-dark px-2 py-0.5 rounded-full">
-                                      You
-                                    </span>
-                                  )}
-                                </td>
-                                <td className="px-4 py-3">{user.score}</td>
-                                <td className="px-4 py-3">{user.streak}</td>
-                                <td className="px-4 py-3">
-                                  {user.achievements}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
                       </div>
 
-                      <div className="mt-6 bg-muted/30 p-4 rounded-lg">
-                        <h4 className="font-medium">Your Stats</h4>
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-2">
-                          <div className="bg-white p-3 rounded-lg shadow-sm">
-                            <div className="text-sm text-muted-foreground">
-                              Rank
-                            </div>
-                            <div className="text-2xl font-bold">2nd</div>
-                          </div>
-                          <div className="bg-white p-3 rounded-lg shadow-sm">
-                            <div className="text-sm text-muted-foreground">
-                              Total Points
-                            </div>
-                            <div className="text-2xl font-bold">1,105</div>
-                          </div>
-                          <div className="bg-white p-3 rounded-lg shadow-sm">
-                            <div className="text-sm text-muted-foreground">
-                              Monthly Gain
-                            </div>
-                            <div className="text-2xl font-bold text-green-500">
-                              +215
-                            </div>
-                          </div>
-                          <div className="bg-white p-3 rounded-lg shadow-sm">
-                            <div className="text-sm text-muted-foreground">
-                              To Next Rank
-                            </div>
-                            <div className="text-2xl font-bold">136</div>
-                          </div>
+                      <div style={{ marginTop: "16px" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            marginBottom: "8px",
+                          }}
+                        >
+                          <IonText color="medium" style={{ fontSize: "14px" }}>
+                            Your Rewards
+                          </IonText>
+                          <IonText color="primary" style={{ fontWeight: 500 }}>
+                            +15 STRK this week
+                          </IonText>
                         </div>
+                        <IonButton expand="block" color="primary">
+                          Claim Rewards
+                        </IonButton>
                       </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-              </Tabs>
+                    </IonCardContent>
+                  </IonCard>
+                </IonCol>
+
+                <IonCol size="12">
+                  <IonCard>
+                    <IonCardHeader>
+                      <IonCardTitle>Community Benefits</IonCardTitle>
+                      <IonCardSubtitle>
+                        How the DAO helps our members
+                      </IonCardSubtitle>
+                    </IonCardHeader>
+                    <IonCardContent>
+                      <IonGrid>
+                        <IonRow>
+                          <IonCol size="12" sizeMd="4">
+                            <BenefitCard
+                              icon={documentTextOutline}
+                              title="Governance"
+                              description="Vote on proposals to improve diabetes care standards and services"
+                            />
+                          </IonCol>
+                          <IonCol size="12" sizeMd="4">
+                            <BenefitCard
+                              icon={ribbonOutline}
+                              title="Rewards"
+                              description="Earn STRK tokens for maintaining healthy habits and contributing"
+                            />
+                          </IonCol>
+                          <IonCol size="12" sizeMd="4">
+                            <BenefitCard
+                              icon={heartOutline}
+                              title="Support"
+                              description="Access to a community of people sharing similar health journeys"
+                            />
+                          </IonCol>
+                        </IonRow>
+                      </IonGrid>
+                    </IonCardContent>
+                  </IonCard>
+                </IonCol>
+              </IonRow>
+            </IonGrid>
+          </div>
+        )}
+
+        {/* Proposals Tab */}
+        {activeTab === "proposals" && (
+          <div className="ion-margin-top">
+            <IonCard>
+              <IonCardContent>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: "16px",
+                  }}
+                >
+                  <h2 style={{ fontSize: "18px", fontWeight: 500, margin: 0 }}>
+                    Active Proposals
+                  </h2>
+                  <IonButton color="primary">New Proposal</IonButton>
+                </div>
+
+                <div style={{ marginBottom: "20px" }}>
+                  <ProposalCard
+                    title="Add Weekly Diabetes Education Sessions"
+                    description="Allocate 1,000 STRK to fund weekly educational sessions on managing diabetes with certified educators."
+                    author="diabetes_educator.eth"
+                    votes={{ for: 67, against: 13, abstain: 20 }}
+                    endTime="2 days"
+                    status="active"
+                  />
+
+                  <ProposalCard
+                    title="Community Exercise Challenge"
+                    description="Create a monthly exercise challenge with STRK rewards for participants who meet their goals."
+                    author="health_coach.eth"
+                    votes={{ for: 82, against: 5, abstain: 13 }}
+                    endTime="4 days"
+                    status="active"
+                  />
+
+                  <ProposalCard
+                    title="Partner with Nutrition Tracking App"
+                    description="Form partnership with NutriTrack app to provide discounted subscriptions for DAO members."
+                    author="tech_innovator.eth"
+                    votes={{ for: 45, against: 42, abstain: 13 }}
+                    endTime="1 day"
+                    status="active"
+                  />
+                </div>
+
+                <div style={{ marginTop: "24px" }}>
+                  <h3
+                    style={{
+                      fontSize: "16px",
+                      fontWeight: 500,
+                      marginBottom: "16px",
+                    }}
+                  >
+                    Past Proposals
+                  </h3>
+                  <div>
+                    <ProposalCard
+                      title="Lower Threshold for Reward Distribution"
+                      description="Reduce the minimum threshold for receiving health maintenance rewards from 75% to 65% compliance."
+                      author="patient_advocate.eth"
+                      votes={{ for: 72, against: 23, abstain: 5 }}
+                      endTime="Ended 5 days ago"
+                      status="passed"
+                    />
+
+                    <ProposalCard
+                      title="Fund Research on Continuous Glucose Monitoring"
+                      description="Allocate 5,000 STRK to research the effectiveness of CGM devices for type 2 diabetes patients."
+                      author="research_lead.eth"
+                      votes={{ for: 35, against: 59, abstain: 6 }}
+                      endTime="Ended 2 weeks ago"
+                      status="rejected"
+                    />
+                  </div>
+                </div>
+              </IonCardContent>
+            </IonCard>
+          </div>
+        )}
+
+        {/* Rewards Tab */}
+        {activeTab === "rewards" && (
+          <div className="ion-margin-top">
+            <IonGrid>
+              <IonRow>
+                <IonCol size="12" sizeMd="6">
+                  <IonCard>
+                    <IonCardHeader>
+                      <IonCardTitle>Earning Opportunities</IonCardTitle>
+                      <IonCardSubtitle>
+                        Ways to earn STRK tokens
+                      </IonCardSubtitle>
+                    </IonCardHeader>
+                    <IonCardContent>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "16px",
+                        }}
+                      >
+                        <RewardItem
+                          title="Daily Blood Sugar Logs"
+                          description="Log your blood sugar readings consistently"
+                          reward="5 STRK/week"
+                          completion={80}
+                        />
+                        <RewardItem
+                          title="Medication Adherence"
+                          description="Take medications as prescribed"
+                          reward="10 STRK/week"
+                          completion={100}
+                        />
+                        <RewardItem
+                          title="Exercise Goals"
+                          description="Meet your weekly exercise targets"
+                          reward="15 STRK/week"
+                          completion={40}
+                        />
+                        <RewardItem
+                          title="Proposal Voting"
+                          description="Participate in DAO governance"
+                          reward="5 STRK/proposal"
+                          completion={75}
+                        />
+                      </div>
+                    </IonCardContent>
+                  </IonCard>
+                </IonCol>
+
+                <IonCol size="12" sizeMd="6">
+                  <IonCard>
+                    <IonCardHeader>
+                      <IonCardTitle>Reward History</IonCardTitle>
+                      <IonCardSubtitle>
+                        Your recent STRK earnings
+                      </IonCardSubtitle>
+                    </IonCardHeader>
+                    <IonCardContent>
+                      <IonList>
+                        <IonItem
+                          lines="full"
+                          style={{ "--background": "var(--ion-color-light)" }}
+                        >
+                          <div style={{ padding: "8px 0" }}>
+                            <h3
+                              style={{ margin: "0 0 4px 0", fontWeight: 500 }}
+                            >
+                              Weekly Health Goals
+                            </h3>
+                            <IonText
+                              color="medium"
+                              style={{ fontSize: "14px" }}
+                            >
+                              May 8, 2024
+                            </IonText>
+                          </div>
+                          <IonText
+                            slot="end"
+                            color="primary"
+                            style={{ fontWeight: 500 }}
+                          >
+                            +15 STRK
+                          </IonText>
+                        </IonItem>
+
+                        <IonItem
+                          lines="full"
+                          style={{ "--background": "var(--ion-color-light)" }}
+                        >
+                          <div style={{ padding: "8px 0" }}>
+                            <h3
+                              style={{ margin: "0 0 4px 0", fontWeight: 500 }}
+                            >
+                              Proposal Participation
+                            </h3>
+                            <IonText
+                              color="medium"
+                              style={{ fontSize: "14px" }}
+                            >
+                              May 5, 2024
+                            </IonText>
+                          </div>
+                          <IonText
+                            slot="end"
+                            color="primary"
+                            style={{ fontWeight: 500 }}
+                          >
+                            +5 STRK
+                          </IonText>
+                        </IonItem>
+
+                        <IonItem
+                          lines="full"
+                          style={{ "--background": "var(--ion-color-light)" }}
+                        >
+                          <div style={{ padding: "8px 0" }}>
+                            <h3
+                              style={{ margin: "0 0 4px 0", fontWeight: 500 }}
+                            >
+                              Weekly Health Goals
+                            </h3>
+                            <IonText
+                              color="medium"
+                              style={{ fontSize: "14px" }}
+                            >
+                              May 1, 2024
+                            </IonText>
+                          </div>
+                          <IonText
+                            slot="end"
+                            color="primary"
+                            style={{ fontWeight: 500 }}
+                          >
+                            +20 STRK
+                          </IonText>
+                        </IonItem>
+
+                        <IonItem
+                          lines="full"
+                          style={{ "--background": "var(--ion-color-light)" }}
+                        >
+                          <div style={{ padding: "8px 0" }}>
+                            <h3
+                              style={{ margin: "0 0 4px 0", fontWeight: 500 }}
+                            >
+                              HbA1c Improvement
+                            </h3>
+                            <IonText
+                              color="medium"
+                              style={{ fontSize: "14px" }}
+                            >
+                              April 28, 2024
+                            </IonText>
+                          </div>
+                          <IonText
+                            slot="end"
+                            color="primary"
+                            style={{ fontWeight: 500 }}
+                          >
+                            +50 STRK
+                          </IonText>
+                        </IonItem>
+                      </IonList>
+                    </IonCardContent>
+                  </IonCard>
+                </IonCol>
+
+                <IonCol size="12">
+                  <IonCard>
+                    <IonCardHeader>
+                      <IonCardTitle>Token Utility</IonCardTitle>
+                      <IonCardSubtitle>
+                        Ways to use your STRK tokens
+                      </IonCardSubtitle>
+                    </IonCardHeader>
+                    <IonCardContent>
+                      <IonGrid>
+                        <IonRow>
+                          <IonCol size="12" sizeMd="4">
+                            <div
+                              style={{
+                                padding: "16px",
+                                background: "var(--ion-color-light)",
+                                borderRadius: "8px",
+                              }}
+                            >
+                              <IonIcon
+                                icon={bookOutline}
+                                color="primary"
+                                style={{
+                                  fontSize: "24px",
+                                  marginBottom: "8px",
+                                }}
+                              />
+                              <h3
+                                style={{ fontWeight: 500, margin: "0 0 4px 0" }}
+                              >
+                                Educational Resources
+                              </h3>
+                              <IonText
+                                color="medium"
+                                style={{ fontSize: "14px" }}
+                              >
+                                Unlock premium educational content and courses
+                              </IonText>
+                            </div>
+                          </IonCol>
+
+                          <IonCol size="12" sizeMd="4">
+                            <div
+                              style={{
+                                padding: "16px",
+                                background: "var(--ion-color-light)",
+                                borderRadius: "8px",
+                              }}
+                            >
+                              <IonIcon
+                                icon={documentTextOutline}
+                                color="primary"
+                                style={{
+                                  fontSize: "24px",
+                                  marginBottom: "8px",
+                                }}
+                              />
+                              <h3
+                                style={{ fontWeight: 500, margin: "0 0 4px 0" }}
+                              >
+                                Governance Weight
+                              </h3>
+                              <IonText
+                                color="medium"
+                                style={{ fontSize: "14px" }}
+                              >
+                                More tokens = more voting power in DAO decisions
+                              </IonText>
+                            </div>
+                          </IonCol>
+
+                          <IonCol size="12" sizeMd="4">
+                            <div
+                              style={{
+                                padding: "16px",
+                                background: "var(--ion-color-light)",
+                                borderRadius: "8px",
+                              }}
+                            >
+                              <IonIcon
+                                icon={ribbonOutline}
+                                color="primary"
+                                style={{
+                                  fontSize: "24px",
+                                  marginBottom: "8px",
+                                }}
+                              />
+                              <h3
+                                style={{ fontWeight: 500, margin: "0 0 4px 0" }}
+                              >
+                                Premium Features
+                              </h3>
+                              <IonText
+                                color="medium"
+                                style={{ fontSize: "14px" }}
+                              >
+                                Access to advanced health tracking and AI
+                                insights
+                              </IonText>
+                            </div>
+                          </IonCol>
+                        </IonRow>
+                      </IonGrid>
+                    </IonCardContent>
+                  </IonCard>
+                </IonCol>
+              </IonRow>
+            </IonGrid>
+          </div>
+        )}
+
+        {/* Members Tab */}
+        {activeTab === "members" && (
+          <div className="ion-margin-top">
+            <IonCard>
+              <IonCardContent>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: "16px",
+                  }}
+                >
+                  <h2 style={{ fontSize: "18px", fontWeight: 500, margin: 0 }}>
+                    Community Members
+                  </h2>
+                  <IonSearchbar
+                    placeholder="Search members..."
+                    style={{ maxWidth: "300px" }}
+                  ></IonSearchbar>
+                </div>
+
+                <IonList>
+                  <MemberCard
+                    name="Sarah Johnson"
+                    address="health_advocate.eth"
+                    level="Gold Member"
+                    joinDate="Dec 2023"
+                    contribution="Active Contributor"
+                    avatar="/placeholder.svg"
+                  />
+
+                  <MemberCard
+                    name="Michael Chen"
+                    address="fitness_expert.eth"
+                    level="Platinum Member"
+                    joinDate="Jan 2024"
+                    contribution="Proposal Author"
+                    avatar="/placeholder.svg"
+                  />
+
+                  <MemberCard
+                    name="Aisha Patel"
+                    address="wellness_coach.eth"
+                    level="Silver Member"
+                    joinDate="Mar 2024"
+                    contribution="New Member"
+                    avatar="/placeholder.svg"
+                  />
+
+                  <MemberCard
+                    name="John Smith"
+                    address="tech_health.eth"
+                    level="Silver Member"
+                    joinDate="Apr 2024"
+                    contribution="Voter"
+                    avatar="/placeholder.svg"
+                  />
+
+                  <MemberCard
+                    name="Emma Rodriguez"
+                    address="nutritionist.eth"
+                    level="Gold Member"
+                    joinDate="Feb 2024"
+                    contribution="Educational Content"
+                    avatar="/placeholder.svg"
+                  />
+                </IonList>
+
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "24px",
+                  }}
+                >
+                  <IonButton fill="outline">Load More Members</IonButton>
+                </div>
+              </IonCardContent>
+            </IonCard>
+          </div>
+        )}
+      </IonContent>
+    </IonPage>
+  );
+};
+
+interface BenefitCardProps {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+const BenefitCard: React.FC<BenefitCardProps> = ({
+  icon,
+  title,
+  description,
+}) => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
+        padding: "16px",
+        background: "var(--ion-color-light)",
+        borderRadius: "8px",
+      }}
+    >
+      <IonIcon
+        icon={icon}
+        color="primary"
+        style={{ fontSize: "24px", marginBottom: "12px" }}
+      />
+      <h3 style={{ fontWeight: 500, margin: "0 0 4px 0" }}>{title}</h3>
+      <IonText color="medium" style={{ fontSize: "14px" }}>
+        {description}
+      </IonText>
+    </div>
+  );
+};
+
+interface ProposalCardProps {
+  title: string;
+  description: string;
+  author: string;
+  votes: {
+    for: number;
+    against: number;
+    abstain: number;
+  };
+  endTime: string;
+  status: "active" | "passed" | "rejected";
+}
+
+const ProposalCard: React.FC<ProposalCardProps> = ({
+  title,
+  description,
+  author,
+  votes,
+  endTime,
+  status,
+}) => {
+  const getStatusColor = () => {
+    switch (status) {
+      case "active":
+        return "primary";
+      case "passed":
+        return "success";
+      case "rejected":
+        return "danger";
+      default:
+        return "medium";
+    }
+  };
+
+  return (
+    <IonCard style={{ margin: "12px 0" }}>
+      <IonCardContent>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            marginBottom: "8px",
+          }}
+        >
+          <h3 style={{ fontWeight: 500, margin: 0 }}>{title}</h3>
+          <IonBadge color={getStatusColor()}>
+            {status.charAt(0).toUpperCase() + status.slice(1)}
+          </IonBadge>
+        </div>
+
+        <IonText
+          color="medium"
+          style={{ fontSize: "14px", display: "block", marginBottom: "12px" }}
+        >
+          {description}
+        </IonText>
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            fontSize: "12px",
+            color: "var(--ion-color-medium)",
+            marginBottom: "12px",
+          }}
+        >
+          <IonIcon icon={personOutline} style={{ marginRight: "4px" }} />
+          <span>{author}</span>
+          <span style={{ margin: "0 8px" }}>•</span>
+          <span>{endTime}</span>
+        </div>
+
+        {status === "active" && (
+          <div style={{ marginBottom: "12px" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                fontSize: "12px",
+                marginBottom: "4px",
+              }}
+            >
+              <span>For: {votes.for}%</span>
+              <span>Against: {votes.against}%</span>
+              <span>Abstain: {votes.abstain}%</span>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                height: "8px",
+                borderRadius: "4px",
+                overflow: "hidden",
+              }}
+            >
+              <div
+                style={{
+                  background: "var(--ion-color-success)",
+                  width: `${votes.for}%`,
+                }}
+              ></div>
+              <div
+                style={{
+                  background: "var(--ion-color-danger)",
+                  width: `${votes.against}%`,
+                }}
+              ></div>
+              <div
+                style={{
+                  background: "var(--ion-color-medium-tint)",
+                  width: `${votes.abstain}%`,
+                }}
+              ></div>
             </div>
           </div>
+        )}
+
+        {status === "active" ? (
+          <div style={{ display: "flex", gap: "8px" }}>
+            <IonButton expand="block" color="success">
+              <IonIcon slot="start" icon={checkmarkOutline} />
+              Vote For
+            </IonButton>
+            <IonButton expand="block" fill="outline" color="danger">
+              <IonIcon slot="start" icon={closeOutline} />
+              Vote Against
+            </IonButton>
+          </div>
+        ) : (
+          <IonButton expand="block" fill="outline">
+            View Details
+          </IonButton>
+        )}
+      </IonCardContent>
+    </IonCard>
+  );
+};
+
+interface RewardItemProps {
+  title: string;
+  description: string;
+  reward: string;
+  completion: number;
+}
+
+const RewardItem: React.FC<RewardItemProps> = ({
+  title,
+  description,
+  reward,
+  completion,
+}) => {
+  return (
+    <div
+      style={{
+        padding: "12px",
+        background: "var(--ion-color-light)",
+        borderRadius: "8px",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "8px",
+        }}
+      >
+        <div>
+          <h3 style={{ fontWeight: 500, margin: "0 0 4px 0" }}>{title}</h3>
+          <IonText color="medium" style={{ fontSize: "14px" }}>
+            {description}
+          </IonText>
         </div>
-      </main>
-      <Footer />
+        <IonText color="primary" style={{ fontWeight: 500 }}>
+          {reward}
+        </IonText>
+      </div>
+
+      <div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            fontSize: "12px",
+            marginBottom: "4px",
+          }}
+        >
+          <span>Progress</span>
+          <span>{completion}%</span>
+        </div>
+        <IonProgressBar
+          value={completion / 100}
+          style={{ height: "6px", borderRadius: "3px" }}
+        />
+      </div>
     </div>
+  );
+};
+
+interface MemberCardProps {
+  name: string;
+  address: string;
+  level: string;
+  joinDate: string;
+  contribution: string;
+  avatar: string;
+}
+
+const MemberCard: React.FC<MemberCardProps> = ({
+  name,
+  address,
+  level,
+  joinDate,
+  contribution,
+  avatar,
+}) => {
+  const getLevelColor = () => {
+    if (level.includes("Platinum")) return "tertiary";
+    if (level.includes("Gold")) return "warning";
+    if (level.includes("Silver")) return "medium";
+    return "primary";
+  };
+
+  return (
+    <IonItem lines="full">
+      <IonAvatar slot="start">
+        <img src={avatar} alt={name} />
+      </IonAvatar>
+
+      <IonLabel>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            marginBottom: "4px",
+          }}
+        >
+          <h2 style={{ margin: 0, fontWeight: 500 }}>{name}</h2>
+          <IonBadge color={getLevelColor()}>{level}</IonBadge>
+        </div>
+        <IonText color="medium" style={{ fontSize: "14px" }}>
+          {address}
+        </IonText>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            marginTop: "4px",
+            fontSize: "12px",
+            color: "var(--ion-color-medium)",
+          }}
+        >
+          <span>Joined: {joinDate}</span>
+          <span>•</span>
+          <span>{contribution}</span>
+        </div>
+      </IonLabel>
+
+      <IonButton slot="end" fill="outline" size="small">
+        View
+      </IonButton>
+    </IonItem>
   );
 };
 

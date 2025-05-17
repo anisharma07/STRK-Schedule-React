@@ -1,338 +1,727 @@
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import {
+  IonPage,
+  IonContent,
+  IonCard,
+  IonCardContent,
+  IonButton,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonText,
+  IonSegment,
+  IonSegmentButton,
+  IonProgressBar,
+  IonList,
+  IonSkeletonText,
+} from "@ionic/react";
+import {
+  pulse as activityIcon,
+  clipboard,
+  calendar as calendarIcon,
+  restaurant as utensilsIcon,
+  medkit as pillIcon,
+} from "ionicons/icons";
+import Header from "@/components/layout/Header";
+import { useAccount } from "@starknet-react/core";
+import {
+  useGetBloodSugarReadings,
+  useGetHbReadings,
+  useGetWeight,
+  useGetWeightUnit,
+} from "@/hooks/contractRead";
 
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import HealthMetric from "@/components/HealthMetric";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import RewardCard from "@/components/RewardCard";
+const Dashboard: React.FC = () => {
+  const history = useHistory();
+  const [activeTab, setActiveTab] = useState("all");
 
-const Dashboard = () => {
-  const mockHealthData = {
-    bloodGlucose: {
-      current: 118,
-      unit: "mg/dL",
-      trend: "down" as const,
-      change: "-12 from last reading"
-    },
-    weight: {
-      current: 172,
-      unit: "lbs",
-      trend: "stable" as const,
-      change: "No change in 2 weeks"
-    },
-    activity: {
-      current: 8240,
-      unit: "steps",
-      trend: "up" as const,
-      change: "+1200 from yesterday"
-    },
-    hba1c: {
-      current: 6.7,
-      unit: "%",
-      trend: "down" as const,
-      change: "-0.3 from last quarter"
+  // Get user's wallet address
+  const { address } = useAccount();
+
+  // Fetch health metrics from blockchain
+  const {
+    readings: bloodSugarData,
+    isLoading: bloodSugarLoading,
+    isError: bloodSugarError,
+  } = useGetBloodSugarReadings({ accountAddress: address });
+
+  const {
+    readings: hba1cData,
+    isLoading: hba1cLoading,
+    isError: hba1cError,
+  } = useGetHbReadings({ accountAddress: address });
+
+  const {
+    weight: weightData,
+    isLoading: weightLoading,
+    isError: weightError,
+  } = useGetWeight({ accountAddress: address });
+
+  const { unit: weightUnitData, isLoading: weightUnitLoading } =
+    useGetWeightUnit({ accountAddress: address });
+
+  // State to store formatted health data
+  const [healthMetrics, setHealthMetrics] = useState({
+    bloodSugar: { value: "0", status: "normal", change: "0" },
+    hba1c: { value: "0", status: "normal", change: "0" },
+    weight: { value: "0", unit: "kg", status: "normal", change: "0" },
+    healthScore: { value: "0", status: "normal", change: "0" },
+  });
+
+  // Process data when it arrives from blockchain
+  useEffect(() => {
+    // Process blood sugar data
+    if (bloodSugarData && !bloodSugarLoading) {
+      const bloodSugarValue = (
+        parseInt(bloodSugarData.toString()) / 10
+      ).toFixed(1);
+      // Determine status based on blood sugar ranges
+      let status = "normal";
+      if (parseInt(bloodSugarValue) < 70) status = "danger";
+      else if (parseInt(bloodSugarValue) > 180) status = "warning";
+      else if (
+        parseInt(bloodSugarValue) > 80 &&
+        parseInt(bloodSugarValue) < 120
+      )
+        status = "good";
+
+      setHealthMetrics((prev) => ({
+        ...prev,
+        bloodSugar: {
+          value: bloodSugarValue,
+          status,
+          change: "-5", // This would ideally be calculated from historical data
+        },
+      }));
+    }
+
+    // Process HbA1c data
+    if (hba1cData && !hba1cLoading) {
+      const hba1cValue = (parseInt(hba1cData.toString()) / 10).toFixed(1);
+      // Determine status based on HbA1c ranges
+      let status = "normal";
+      if (parseFloat(hba1cValue) < 5.7) status = "good";
+      else if (parseFloat(hba1cValue) >= 5.7 && parseFloat(hba1cValue) < 6.5)
+        status = "normal";
+      else if (parseFloat(hba1cValue) >= 6.5) status = "warning";
+
+      setHealthMetrics((prev) => ({
+        ...prev,
+        hba1c: {
+          value: hba1cValue,
+          status,
+          change: "-0.3", // Ideally calculated from historical data
+        },
+      }));
+    }
+
+    // Process weight data
+    if (weightData && !weightLoading) {
+      let weightValue = (parseInt(weightData.toString()) / 10).toFixed(1);
+      let unit = "kg";
+
+      // Convert to lbs if that's the user's preference
+      if (weightUnitData && weightUnitData.toString().includes("lbs")) {
+        weightValue = (parseFloat(weightValue) * 2.20462).toFixed(1);
+        unit = "lbs";
+      }
+
+      setHealthMetrics((prev) => ({
+        ...prev,
+        weight: {
+          value: weightValue,
+          unit,
+          status: "normal", // This would be calculated based on BMI, etc.
+          change: "-2.5", // Ideally calculated from historical data
+        },
+      }));
+    }
+
+    // Calculate health score (simplified example)
+    if (bloodSugarData && hba1cData && weightData) {
+      // This is a simplified algorithm - in a real app you'd use a more sophisticated approach
+      const bloodSugarValue = parseInt(bloodSugarData.toString()) / 10;
+      const hba1cValue = parseInt(hba1cData.toString()) / 10;
+
+      let bloodSugarScore = 0;
+      if (bloodSugarValue >= 70 && bloodSugarValue <= 180) {
+        bloodSugarScore =
+          30 - Math.min(30, Math.abs(bloodSugarValue - 100) / 3);
+      }
+
+      let hba1cScore = 0;
+      if (hba1cValue <= 7) {
+        hba1cScore = 30 - (hba1cValue - 5) * 15;
+      }
+
+      // Add other metrics for a total score out of 100
+      const healthScore = Math.round(bloodSugarScore + hba1cScore + 25); // Other factors would contribute remaining points
+
+      setHealthMetrics((prev) => ({
+        ...prev,
+        healthScore: {
+          value: healthScore.toString(),
+          status:
+            healthScore >= 80
+              ? "good"
+              : healthScore >= 60
+              ? "normal"
+              : "warning",
+          change: "+3", // Ideally calculated from historical data
+        },
+      }));
+    }
+  }, [
+    bloodSugarData,
+    hba1cData,
+    weightData,
+    weightUnitData,
+    bloodSugarLoading,
+    hba1cLoading,
+    weightLoading,
+  ]);
+
+  return (
+    <IonPage>
+      <Header />
+
+      <IonContent className="ion-padding">
+        <h1
+          style={{ fontSize: "24px", fontWeight: "bold", margin: "0 0 8px 0" }}
+        >
+          Your Health Dashboard
+        </h1>
+        <IonText color="medium">
+          <p>Track your progress and manage your health</p>
+        </IonText>
+
+        {/* Health Metrics */}
+        <IonGrid className="ion-margin-bottom">
+          <IonRow>
+            <IonCol size="6" sizeMd="3">
+              {bloodSugarLoading ? (
+                <LoadingMetricCard title="Blood Sugar" />
+              ) : bloodSugarError ? (
+                <ErrorMetricCard title="Blood Sugar" />
+              ) : (
+                <HealthMetricCard
+                  title="Blood Sugar"
+                  value={healthMetrics.bloodSugar.value}
+                  unit="mg/dL"
+                  status={healthMetrics.bloodSugar.status as any}
+                  change={healthMetrics.bloodSugar.change}
+                />
+              )}
+            </IonCol>
+            <IonCol size="6" sizeMd="3">
+              {hba1cLoading ? (
+                <LoadingMetricCard title="HbA1c" />
+              ) : hba1cError ? (
+                <ErrorMetricCard title="HbA1c" />
+              ) : (
+                <HealthMetricCard
+                  title="HbA1c"
+                  value={healthMetrics.hba1c.value}
+                  unit="%"
+                  status={healthMetrics.hba1c.status as any}
+                  change={healthMetrics.hba1c.change}
+                />
+              )}
+            </IonCol>
+            <IonCol size="6" sizeMd="3">
+              {weightLoading ? (
+                <LoadingMetricCard title="Weight" />
+              ) : weightError ? (
+                <ErrorMetricCard title="Weight" />
+              ) : (
+                <HealthMetricCard
+                  title="Weight"
+                  value={healthMetrics.weight.value}
+                  unit={healthMetrics.weight.unit}
+                  status={healthMetrics.weight.status as any}
+                  change={healthMetrics.weight.change}
+                />
+              )}
+            </IonCol>
+            <IonCol size="6" sizeMd="3">
+              <HealthMetricCard
+                title="Health Score"
+                value={healthMetrics.healthScore.value}
+                unit="/100"
+                status={healthMetrics.healthScore.status as any}
+                change={healthMetrics.healthScore.change}
+              />
+            </IonCol>
+          </IonRow>
+        </IonGrid>
+
+        {/* Medications Summary */}
+        <IonCard className="ion-margin-bottom">
+          <IonItem lines="none">
+            <IonLabel>
+              <h2>Medication</h2>
+            </IonLabel>
+            <IonButton fill="clear" slot="end" size="small">
+              View All
+            </IonButton>
+          </IonItem>
+
+          <IonCardContent>
+            <MedicationItem
+              name="Metformin"
+              dosage="500mg"
+              time="8:00 AM"
+              remaining={14}
+              total={30}
+            />
+            <MedicationItem
+              name="Gliclazide"
+              dosage="80mg"
+              time="6:00 PM"
+              remaining={10}
+              total={30}
+            />
+            <MedicationItem
+              name="Insulin"
+              dosage="10 units"
+              time="7:30 PM"
+              remaining={20}
+              total={30}
+            />
+          </IonCardContent>
+        </IonCard>
+
+        {/* Activity Feed */}
+        <div className="ion-margin-bottom">
+          <IonItem lines="none" className="ion-margin-bottom">
+            <IonLabel>
+              <h2>Recent Activity</h2>
+            </IonLabel>
+          </IonItem>
+
+          <IonSegment
+            value={activeTab}
+            onIonChange={(e) => setActiveTab(e.detail.value as string)}
+          >
+            <IonSegmentButton value="all">
+              <IonLabel>All</IonLabel>
+            </IonSegmentButton>
+            <IonSegmentButton value="appointments">
+              <IonLabel>Appointments</IonLabel>
+            </IonSegmentButton>
+            <IonSegmentButton value="meals">
+              <IonLabel>Meals</IonLabel>
+            </IonSegmentButton>
+            <IonSegmentButton value="medications">
+              <IonLabel>Medications</IonLabel>
+            </IonSegmentButton>
+            <IonSegmentButton value="readings">
+              <IonLabel>Readings</IonLabel>
+            </IonSegmentButton>
+          </IonSegment>
+
+          <IonList className="ion-margin-top">
+            {activeTab === "all" && (
+              <>
+                <ActivityItem
+                  type="appointment"
+                  title="Dr. Smith Appointment"
+                  description="Annual checkup and bloodwork"
+                  time="Tomorrow at 10:00 AM"
+                  icon={clipboard}
+                />
+                <ActivityItem
+                  type="meal"
+                  title="Lunch Logged"
+                  description="Grilled chicken salad, 450 calories"
+                  time="Today at 1:30 PM"
+                  icon={utensilsIcon}
+                />
+                <ActivityItem
+                  type="medication"
+                  title="Metformin Taken"
+                  description="Morning dose completed"
+                  time="Today at 8:15 AM"
+                  icon={pillIcon}
+                />
+                <ActivityItem
+                  type="exercise"
+                  title="Walking"
+                  description="30 minutes, 2500 steps"
+                  time="Today at 5:30 PM"
+                  icon={activityIcon}
+                />
+                <ActivityItem
+                  type="reading"
+                  title="Blood Sugar Reading"
+                  description="105 mg/dL (In target range)"
+                  time="Today at 9:00 AM"
+                  icon={activityIcon}
+                />
+              </>
+            )}
+
+            {activeTab === "appointments" && (
+              <>
+                <ActivityItem
+                  type="appointment"
+                  title="Dr. Smith Appointment"
+                  description="Annual checkup and bloodwork"
+                  time="Tomorrow at 10:00 AM"
+                  icon={clipboard}
+                />
+                <ActivityItem
+                  type="appointment"
+                  title="Nutritionist Meeting"
+                  description="Diet plan review"
+                  time="Friday at 2:00 PM"
+                  icon={clipboard}
+                />
+              </>
+            )}
+
+            {activeTab === "meals" && (
+              <>
+                <ActivityItem
+                  type="meal"
+                  title="Lunch Logged"
+                  description="Grilled chicken salad, 450 calories"
+                  time="Today at 1:30 PM"
+                  icon={utensilsIcon}
+                />
+                <ActivityItem
+                  type="meal"
+                  title="Breakfast Logged"
+                  description="Oatmeal with berries, 320 calories"
+                  time="Today at 7:45 AM"
+                  icon={utensilsIcon}
+                />
+              </>
+            )}
+
+            {activeTab === "medications" && (
+              <>
+                <ActivityItem
+                  type="medication"
+                  title="Metformin Taken"
+                  description="Morning dose completed"
+                  time="Today at 8:15 AM"
+                  icon={pillIcon}
+                />
+                <ActivityItem
+                  type="medication"
+                  title="Gliclazide Taken"
+                  description="Evening dose completed"
+                  time="Yesterday at 6:05 PM"
+                  icon={pillIcon}
+                />
+              </>
+            )}
+
+            {activeTab === "readings" && (
+              <>
+                <ActivityItem
+                  type="reading"
+                  title="Blood Sugar Reading"
+                  description="105 mg/dL (In target range)"
+                  time="Today at 9:00 AM"
+                  icon={activityIcon}
+                />
+                <ActivityItem
+                  type="reading"
+                  title="Blood Sugar Reading"
+                  description="118 mg/dL (In target range)"
+                  time="Yesterday at 9:15 AM"
+                  icon={activityIcon}
+                />
+              </>
+            )}
+          </IonList>
+        </div>
+
+        {/* Upcoming Events Summary */}
+        <IonCard>
+          <IonItem lines="none">
+            <IonLabel>
+              <h2>Upcoming Events</h2>
+            </IonLabel>
+            <IonButton
+              fill="clear"
+              slot="end"
+              size="small"
+              onClick={() => history.push("/schedule")}
+            >
+              View Calendar
+            </IonButton>
+          </IonItem>
+
+          <IonCardContent>
+            <EventItem
+              title="Dr. Smith Appointment"
+              date="Tomorrow"
+              time="10:00 AM"
+              location="Downtown Medical Center"
+              icon={calendarIcon}
+            />
+            <EventItem
+              title="Blood Sugar Check"
+              date="Today"
+              time="6:00 PM"
+              location="Home"
+              icon={activityIcon}
+            />
+            <EventItem
+              title="Pharmacy Pickup"
+              date="Friday"
+              time="3:30 PM"
+              location="Main Street Pharmacy"
+              icon={pillIcon}
+            />
+          </IonCardContent>
+        </IonCard>
+      </IonContent>
+    </IonPage>
+  );
+};
+
+const LoadingMetricCard: React.FC<{ title: string }> = ({ title }) => {
+  return (
+    <IonCard className="ion-no-margin">
+      <IonCardContent className="ion-padding-horizontal ion-padding-top">
+        <IonText color="medium">
+          <p>{title}</p>
+        </IonText>
+        <div className="ion-margin-top">
+          <IonSkeletonText animated style={{ width: "70%", height: "24px" }} />
+        </div>
+        <IonSkeletonText animated style={{ width: "40%", height: "16px" }} />
+      </IonCardContent>
+    </IonCard>
+  );
+};
+
+const ErrorMetricCard: React.FC<{ title: string }> = ({ title }) => {
+  return (
+    <IonCard className="ion-no-margin">
+      <IonCardContent className="ion-padding-horizontal ion-padding-top">
+        <IonText color="medium">
+          <p>{title}</p>
+        </IonText>
+        <div className="ion-margin-top">
+          <IonText color="danger">
+            <span style={{ fontSize: "1rem" }}>Error loading data</span>
+          </IonText>
+        </div>
+        <IonText color="medium">
+          <p>Check connection</p>
+        </IonText>
+      </IonCardContent>
+    </IonCard>
+  );
+};
+// Component definitions for the sub-components:
+
+interface HealthMetricCardProps {
+  title: string;
+  value: string;
+  unit: string;
+  status: "normal" | "good" | "warning" | "danger";
+  change: string;
+}
+
+const HealthMetricCard: React.FC<HealthMetricCardProps> = ({
+  title,
+  value,
+  unit,
+  status,
+  change,
+}) => {
+  const getStatusColor = () => {
+    switch (status) {
+      case "good":
+        return "success";
+      case "normal":
+        return "primary";
+      case "warning":
+        return "warning";
+      case "danger":
+        return "danger";
+      default:
+        return "medium";
     }
   };
 
-  const upcomingEvents = [
-    {
-      title: "Doctor Appointment",
-      date: "May 15, 2025",
-      time: "10:30 AM",
-      provider: "Dr. Sarah Johnson"
-    },
-    {
-      title: "Medication Renewal",
-      date: "May 20, 2025",
-      time: "Auto-renewal",
-      provider: "Metro Pharmacy"
-    },
-    {
-      title: "Lab Tests",
-      date: "June 3, 2025",
-      time: "9:00 AM",
-      provider: "Central Clinical Labs"
-    }
-  ];
+  return (
+    <IonCard className="ion-no-margin">
+      <IonCardContent className="ion-padding-horizontal ion-padding-top">
+        <IonText color="medium">
+          <p>{title}</p>
+        </IonText>
+        <div className="ion-margin-top">
+          <IonText>
+            <span style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
+              {value}
+            </span>
+            <span style={{ fontSize: "0.875rem", marginLeft: "4px" }}>
+              {unit}
+            </span>
+          </IonText>
+        </div>
+        <IonText color={getStatusColor()}>
+          <p>
+            {change.startsWith("+") ? "↑" : "↓"} {change.replace(/[+-]/, "")}{" "}
+            {status}
+          </p>
+        </IonText>
+      </IonCardContent>
+    </IonCard>
+  );
+};
 
-  const recentActivities = [
-    {
-      type: "Reading",
-      value: "Blood glucose: 126 mg/dL",
-      time: "Today, 8:30 AM"
-    },
-    {
-      type: "Medication",
-      value: "Metformin 500mg taken",
-      time: "Today, 8:00 AM"
-    },
-    {
-      type: "Exercise",
-      value: "Morning walk: 25 minutes",
-      time: "Today, 7:15 AM"
-    },
-    {
-      type: "Reading",
-      value: "Blood glucose: 138 mg/dL",
-      time: "Yesterday, 8:30 PM"
-    },
-    {
-      type: "Meal",
-      value: "Dinner logged: 45g carbs",
-      time: "Yesterday, 7:00 PM"
-    }
-  ];
+interface MedicationItemProps {
+  name: string;
+  dosage: string;
+  time: string;
+  remaining: number;
+  total: number;
+}
 
-  const tokenBalance = 450;
-  const healthScore = 83;
+const MedicationItem: React.FC<MedicationItemProps> = ({
+  name,
+  dosage,
+  time,
+  remaining,
+  total,
+}) => {
+  const percentage = (remaining / total) * 100;
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
-      <main className="flex-grow bg-strk-gray">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-            <div>
-              <h1 className="text-2xl font-bold">Patient Dashboard</h1>
-              <p className="text-muted-foreground">Welcome back, Alex Morgan</p>
-            </div>
-            <div className="mt-4 md:mt-0 flex flex-wrap gap-4">
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-md shadow-sm">
-                <div className="h-3 w-3 rounded-full bg-green-500"></div>
-                <span className="text-sm font-medium">Connected</span>
-              </div>
-              <div className="flex items-center gap-2 bg-strk-purple/10 px-4 py-2 rounded-md text-strk-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span className="font-semibold">{tokenBalance} STRK</span>
-              </div>
-            </div>
+    <IonCard className="ion-margin-bottom">
+      <IonCardContent>
+        <div
+          className="ion-justify-content-between"
+          style={{ display: "flex" }}
+        >
+          <div>
+            <IonText>
+              <h3>{name}</h3>
+            </IonText>
+            <IonText color="medium">
+              <p>
+                {dosage} at {time}
+              </p>
+            </IonText>
           </div>
-
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            <HealthMetric
-              title="Blood Glucose"
-              value={mockHealthData.bloodGlucose.current}
-              unit={mockHealthData.bloodGlucose.unit}
-              trend={mockHealthData.bloodGlucose.trend}
-              trendValue={mockHealthData.bloodGlucose.change}
-              icon={
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
-              }
-            />
-            <HealthMetric
-              title="Weight"
-              value={mockHealthData.weight.current}
-              unit={mockHealthData.weight.unit}
-              trend={mockHealthData.weight.trend}
-              trendValue={mockHealthData.weight.change}
-              icon={
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
-                </svg>
-              }
-            />
-            <HealthMetric
-              title="Daily Activity"
-              value={mockHealthData.activity.current}
-              unit={mockHealthData.activity.unit}
-              trend={mockHealthData.activity.trend}
-              trendValue={mockHealthData.activity.change}
-              icon={
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              }
-            />
-            <HealthMetric
-              title="HbA1c"
-              value={mockHealthData.hba1c.current}
-              unit={mockHealthData.hba1c.unit}
-              trend={mockHealthData.hba1c.trend}
-              trendValue={mockHealthData.hba1c.change}
-              icon={
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              }
-            />
-          </div>
-
-          <div className="grid gap-6 mt-6 md:grid-cols-12">
-            {/* Health NFT Card */}
-            <Card className="md:col-span-4">
-              <CardHeader className="pb-2">
-                <CardTitle>STRK Health NFT</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="bg-gradient-to-r from-strk-teal to-strk-purple p-6 rounded-lg text-white">
-                  <div className="flex items-center mb-4">
-                    <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center">
-                      <div className="h-8 w-8 rounded-full bg-gradient-to-r from-strk-teal to-strk-purple flex items-center justify-center">
-                        <span className="text-white font-bold text-sm">Sx</span>
-                      </div>
-                    </div>
-                    <div className="ml-3">
-                      <h3 className="text-lg font-bold">Health Score</h3>
-                      <p className="text-sm text-white/80">Level 2 NFT Badge</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-center my-6">
-                    <div className="flex flex-col items-center">
-                      <div className="text-5xl font-bold">{healthScore}</div>
-                      <div className="text-sm text-white/80">out of 100</div>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span>Treatment Adherence</span>
-                      <span>92%</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Health Check-ins</span>
-                      <span>5/7 days</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Lifestyle Score</span>
-                      <span>78/100</span>
-                    </div>
-                  </div>
-                  <Button className="w-full mt-4 bg-white text-strk-purple hover:bg-white/90">View Details</Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Main content area */}
-            <div className="md:col-span-8">
-              <Tabs defaultValue="upcoming">
-                <TabsList className="grid grid-cols-3">
-                  <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
-                  <TabsTrigger value="activity">Recent Activity</TabsTrigger>
-                  <TabsTrigger value="rewards">Available Rewards</TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="upcoming" className="space-y-4 mt-4">
-                  {upcomingEvents.map((event, index) => (
-                    <Card key={index}>
-                      <CardContent className="p-4 flex items-center justify-between">
-                        <div>
-                          <h4 className="font-medium">{event.title}</h4>
-                          <div className="text-sm text-muted-foreground">
-                            {event.date} • {event.time}
-                          </div>
-                          <div className="text-sm mt-1">{event.provider}</div>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button variant="outline" size="sm">Reschedule</Button>
-                          <Button size="sm" className="bg-strk-teal hover:bg-strk-teal-dark">Confirm</Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                  <Button variant="outline" className="w-full">+ Add New Appointment</Button>
-                </TabsContent>
-                
-                <TabsContent value="activity" className="mt-4">
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="space-y-4">
-                        {recentActivities.map((activity, index) => (
-                          <div key={index} className="flex items-start pb-4 border-b last:border-0 last:pb-0">
-                            <div className="w-2 h-2 mt-2 rounded-full bg-strk-teal"></div>
-                            <div className="ml-4 flex-1">
-                              <div className="font-medium">{activity.value}</div>
-                              <div className="text-sm text-muted-foreground flex items-center justify-between">
-                                <span>{activity.type}</span>
-                                <span>{activity.time}</span>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      <Button variant="outline" className="w-full mt-4">View All Activity</Button>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-                
-                <TabsContent value="rewards" className="mt-4">
-                  <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-                    <RewardCard
-                      title="Weekly Check-in Streak"
-                      description="Record your blood glucose at least once daily for 7 consecutive days"
-                      tokenAmount={50}
-                      progress={70}
-                      claimable={false}
-                      category="Health Tracking"
-                      difficulty="easy"
-                    />
-                    <RewardCard
-                      title="Perfect Med Adherence"
-                      description="Take all prescribed medications on schedule for 30 days"
-                      tokenAmount={100}
-                      progress={100}
-                      claimable={true}
-                      category="Treatment"
-                      difficulty="medium"
-                    />
-                    <RewardCard
-                      title="Physical Activity Goal"
-                      description="Complete at least 150 minutes of moderate exercise this week"
-                      tokenAmount={75}
-                      progress={40}
-                      claimable={false}
-                      category="Lifestyle"
-                      difficulty="medium"
-                    />
-                    <RewardCard
-                      title="Optimal Glucose Range"
-                      description="Keep blood glucose readings within target range for 14 days"
-                      tokenAmount={200}
-                      progress={100}
-                      claimable={true}
-                      category="Health Outcome"
-                      difficulty="hard"
-                    />
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </div>
-          </div>
-
-          {/* Quick Actions */}
-          <div className="grid gap-4 grid-cols-2 sm:grid-cols-4 mt-6">
-            <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-1">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              <span>Add Reading</span>
-            </Button>
-            <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-1">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <span>Schedule</span>
-            </Button>
-            <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-1">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-              </svg>
-              <span>Treatment</span>
-            </Button>
-            <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-1">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-              </svg>
-              <span>Message</span>
-            </Button>
-          </div>
+          <IonButton size="small">Take</IonButton>
         </div>
-      </main>
-      <Footer />
-    </div>
+
+        <div className="ion-margin-top">
+          <div
+            className="ion-justify-content-between"
+            style={{ display: "flex" }}
+          >
+            <IonText color="medium" style={{ fontSize: "0.75rem" }}>
+              Remaining: {remaining} of {total}
+            </IonText>
+            <IonText
+              color={percentage < 30 ? "danger" : "medium"}
+              style={{ fontSize: "0.75rem" }}
+            >
+              {percentage.toFixed(0)}%
+            </IonText>
+          </div>
+          <IonProgressBar
+            value={percentage / 100}
+            color={percentage < 30 ? "danger" : "primary"}
+            style={{ height: "6px", marginTop: "4px" }}
+          ></IonProgressBar>
+        </div>
+      </IonCardContent>
+    </IonCard>
+  );
+};
+
+interface ActivityItemProps {
+  type: "appointment" | "meal" | "medication" | "exercise" | "reading";
+  title: string;
+  description: string;
+  time: string;
+  icon: string;
+}
+
+const ActivityItem: React.FC<ActivityItemProps> = ({
+  type,
+  title,
+  description,
+  time,
+  icon,
+}) => {
+  const getIconColor = () => {
+    switch (type) {
+      case "appointment":
+        return "primary";
+      case "meal":
+        return "success";
+      case "medication":
+        return "tertiary";
+      case "exercise":
+        return "warning";
+      case "reading":
+        return "secondary";
+      default:
+        return "medium";
+    }
+  };
+
+  return (
+    <IonItem lines="full" detail={false} className="ion-margin-bottom">
+      <IonIcon icon={icon} slot="start" color={getIconColor()} />
+      <IonLabel>
+        <h2>{title}</h2>
+        <p>{description}</p>
+        <IonText color="medium" style={{ fontSize: "0.75rem" }}>
+          <p>{time}</p>
+        </IonText>
+      </IonLabel>
+    </IonItem>
+  );
+};
+
+interface EventItemProps {
+  title: string;
+  date: string;
+  time: string;
+  location: string;
+  icon: string;
+}
+
+const EventItem: React.FC<EventItemProps> = ({
+  title,
+  date,
+  time,
+  location,
+  icon,
+}) => {
+  return (
+    <IonItem lines="full" className="ion-margin-bottom">
+      <IonIcon icon={icon} slot="start" />
+      <IonLabel>
+        <h2>{title}</h2>
+        <p>
+          {date} at {time}
+        </p>
+        <IonText color="medium" style={{ fontSize: "0.75rem" }}>
+          <p>{location}</p>
+        </IonText>
+      </IonLabel>
+      <IonButton slot="end" size="small" fill="outline">
+        Details
+      </IonButton>
+    </IonItem>
   );
 };
 
