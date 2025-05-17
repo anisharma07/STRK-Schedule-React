@@ -88,9 +88,7 @@ Replace the Pinata credentials with your own (sign up at [pinata.cloud](https://
 Start the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
+ionic serve
 ```
 
 Open your browser and navigate to `http://localhost:5173`
