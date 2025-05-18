@@ -135,27 +135,6 @@ Sensitive data is stored on IPFS with only the hash references stored on-chain f
 ![Image 2](/public/assets/screenshots/Arch2.png)
 ![Image 3](/public/assets/screenshots/Arch3.png)
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- StarkWare for the Starknet infrastructure
-- Pinata for IPFS pinning services
-- The Ionic team for the mobile-first UI framework
-- All contributors and supporters of the project
-
 <div align="center">
   <p>Built with ❤️ for c4gt for better diabetes management through Web3 technology</p>
 </div>
