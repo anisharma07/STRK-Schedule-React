@@ -7,7 +7,8 @@ _A Web3-powered decentralized healthcare platform for diabetes management_
 `0x07b46771d0012e97bd23a4eadcd3511230a0c97f827f0068cd339e7100d36df4`
 
 ### Video Demo
-https://drive.google.com/file/d/1ZuMp5XWDZZxzWQR_LPXU_GZZsVW1g4IA/view?usp=drive_link 
+
+https://drive.google.com/file/d/1ZuMp5XWDZZxzWQR_LPXU_GZZsVW1g4IA/view?usp=drive_link
 
 ## Overview
 
@@ -128,6 +129,12 @@ The application interacts with Starknet smart contracts to:
 
 Sensitive data is stored on IPFS with only the hash references stored on-chain for privacy.
 
+## Architectural Flow
+
+![Image 1](/public/assets/screenshots/Arch1.png)
+![Image 2](/public/assets/screenshots/Arch2.png)
+![Image 3](/public/assets/screenshots/Arch3.png)
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
@@ -150,5 +157,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - All contributors and supporters of the project
 
 <div align="center">
-  <p>Built with ❤️ for better diabetes management through Web3 technology</p>
+  <p>Built with ❤️ for c4gt for better diabetes management through Web3 technology</p>
 </div>
