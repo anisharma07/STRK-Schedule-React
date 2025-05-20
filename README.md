@@ -10,6 +10,10 @@ _A Web3-powered decentralized healthcare platform for diabetes management_
 
 https://drive.google.com/file/d/1ZuMp5XWDZZxzWQR_LPXU_GZZsVW1g4IA/view?usp=drive_link
 
+### Live Demo
+
+https://strk-schedule-react.vercel.app/ 
+
 ## Overview
 
 **STRK Schedule** is a Web3-powered decentralized healthcare platform designed to help individuals manage diabetes more effectively. By leveraging blockchain technology, the platform enables secure tracking of blood sugar levels, medication, activity logs, and medical appointments on-chain.
