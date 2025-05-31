@@ -1,4 +1,5 @@
 # STRK Schedule
+
 _A Web3-powered decentralized healthcare platform for diabetes management_
 
 ## Overview
@@ -46,8 +47,6 @@ The platform empowers patients with verified medical data NFTs and community-gov
 
 - Wallet-based authentication (Argent X, Braavos)
 
-
-
 ### Deployed contract
 
 `0x07b46771d0012e97bd23a4eadcd3511230a0c97f827f0068cd339e7100d36df4`
@@ -58,13 +57,15 @@ https://drive.google.com/file/d/1ZuMp5XWDZZxzWQR_LPXU_GZZsVW1g4IA/view?usp=drive
 
 ### Live Demo
 
-https://strk-schedule-react.vercel.app/ 
+https://strk-schedule-react.vercel.app/
 
 ### User Documentation
 
 https://docs.google.com/document/d/1rMNs1kGmZ-B62w9R5flDNufwST_Nby64qIlPV2Uoa-I/edit?usp=sharing
 
 ### Contributing Guidelines (Developer Docs)
+
+https://github.com/anisharma07/STRK-Schedule-React/blob/main/.github/CONTRIBUITING.md
 
 <div align="center">
   <p>Built with ❤️ for c4gt for better diabetes management through Web3 technology</p>
