@@ -1,18 +1,5 @@
 # STRK Schedule
-
 _A Web3-powered decentralized healthcare platform for diabetes management_
-
-### Deployed contract
-
-`0x07b46771d0012e97bd23a4eadcd3511230a0c97f827f0068cd339e7100d36df4`
-
-### Video Demo
-
-https://drive.google.com/file/d/1ZuMp5XWDZZxzWQR_LPXU_GZZsVW1g4IA/view?usp=drive_link
-
-### Live Demo
-
-https://strk-schedule-react.vercel.app/ 
 
 ## Overview
 
@@ -59,85 +46,25 @@ The platform empowers patients with verified medical data NFTs and community-gov
 
 - Wallet-based authentication (Argent X, Braavos)
 
-## Getting Started
 
-### Prerequisites
 
-- Node.js (v16+)
-- npm or yarn
-- Starknet wallet (Argent X or Braavos)
-- Git
+### Deployed contract
 
-### Installation
+`0x07b46771d0012e97bd23a4eadcd3511230a0c97f827f0068cd339e7100d36df4`
 
-Clone the repository:
+### Video Demo
 
-```bash
-git clone https://github.com/yourusername/strk-schedule.git
-cd strk-schedule
-```
+https://drive.google.com/file/d/1ZuMp5XWDZZxzWQR_LPXU_GZZsVW1g4IA/view?usp=drive_link
 
-Install dependencies:
+### Live Demo
 
-```bash
-npm install
-# or
-yarn install
-```
+https://strk-schedule-react.vercel.app/ 
 
-Create a `.env` file in the root directory with the following content:
+### User Documentation
 
-```env
-VITE_PUBLIC_CONTRACT_ADDRESS=0x07b46771d0012e97bd23a4eadcd3511230a0c97f827f0068cd339e7100d36df4
-VITE_PUBLIC_RPC_URL=https://starknet-sepolia.public.blastapi.io
-VITE_PINATA_API_KEY=your_pinata_api_key
-VITE_PINATA_API_SECRET=your_pinata_api_secret
-VITE_PINATA_JWT=your_pinata_jwt_token
-```
+https://docs.google.com/document/d/1rMNs1kGmZ-B62w9R5flDNufwST_Nby64qIlPV2Uoa-I/edit?usp=sharing
 
-Replace the Pinata credentials with your own (sign up at [pinata.cloud](https://www.pinata.cloud) if you don't have an account).
-
-Start the development server:
-
-```bash
-ionic serve
-```
-
-Open your browser and navigate to `http://localhost:5173`
-
-## Project Structure
-
-```
-/src
-  /components          # Reusable UI components
-  /pages               # Main application pages
-  /hooks               # Custom React hooks
-    /contractRead.tsx  # Hooks for reading from blockchain
-    /contractWrite.tsx # Hooks for writing to blockchain
-  /utils               # Utility functions
-  /assets              # Static assets like images
-  /theme               # Styling and theme configuration
-  App.tsx              # Main application component
-  main.tsx             # Application entry point
-```
-
-## Smart Contract Interaction
-
-The application interacts with Starknet smart contracts to:
-
-- Register and authenticate users
-- Store health measurements (blood sugar, HbA1c, weight)
-- Track medication adherence
-- Manage exercise routines
-- Store health records securely
-
-Sensitive data is stored on IPFS with only the hash references stored on-chain for privacy.
-
-## Architectural Flow
-
-![Image 1](/public/assets/screenshots/Arch1.png)
-![Image 2](/public/assets/screenshots/Arch2.png)
-![Image 3](/public/assets/screenshots/Arch3.png)
+### Contributing Guidelines (Developer Docs)
 
 <div align="center">
   <p>Built with ❤️ for c4gt for better diabetes management through Web3 technology</p>
